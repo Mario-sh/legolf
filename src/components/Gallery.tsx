@@ -2,9 +2,9 @@ import { motion } from 'motion/react';
 import { Maximize2 } from 'lucide-react';
 
 const IMAGES = [
-  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80"
+  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=800"
 ];
 
 export default function Gallery() {

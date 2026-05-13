@@ -8,7 +8,7 @@ export default function RestaurantPage() {
       
       {/* Title & Introduction */}
       <div className="md:col-span-4 bg-brand-navy rounded-2xl p-8 md:p-12 border border-brand-light/5 text-center flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-5"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1200')] bg-cover bg-center opacity-5"></div>
         <div className="relative z-10 max-w-2xl">
           <span className="text-[10px] tracking-widest text-brand-gold uppercase font-bold mb-4 block">Notre Philosophie</span>
           <h2 className="font-serif text-4xl md:text-6xl text-brand-light mb-6 leading-tight">Une histoire d'eau, de feu et de terre.</h2>
@@ -20,7 +20,7 @@ export default function RestaurantPage() {
 
       {/* Chef Profile (2x2) */}
       <div className="md:col-span-2 md:row-span-2 bg-brand-navy-dark rounded-2xl p-6 md:p-8 flex flex-col justify-end border border-brand-gold/10 relative overflow-hidden group min-h-[400px]">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 transition-transform duration-700 group-hover:scale-105"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=800')] bg-cover bg-center opacity-40 transition-transform duration-700 group-hover:scale-105"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-brand-bg/60 to-transparent"></div>
         <div className="relative z-10 flex flex-col">
           <span className="bg-brand-gold w-max text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">Chef Exécutif</span>
@@ -45,7 +45,7 @@ export default function RestaurantPage() {
         <p className="text-[10px] sm:text-xs text-brand-light/60 font-light">Notre cuisine est rythmée par la chaleur de la flamme, apportant des notes torréfiées et primitives à nos poissons.</p>
       </div>
 
-      <div className="md:col-span-1 md:row-span-1 bg-[url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&q=80')] bg-cover bg-center rounded-2xl p-6 md:p-8 min-h-[200px]">
+      <div className="md:col-span-1 md:row-span-1 bg-[url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&q=80&w=800')] bg-cover bg-center rounded-2xl p-6 md:p-8 min-h-[200px]">
         {/* Just for aesthetic image visual */}
       </div>
 
@@ -62,12 +62,12 @@ export default function RestaurantPage() {
           <h4 className="font-serif text-xl text-brand-light mb-2">La Cave</h4>
           <p className="text-[10px] sm:text-xs text-brand-light/50 font-light max-w-xs">Plus de 300 références sélectionnées avec passion par notre chef sommelier, mettant à l'honneur les vignerons indépendants.</p>
         </div>
-        <div className="w-16 h-16 rounded-full bg-[url('https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80')] bg-cover bg-center border-2 border-brand-gold"></div>
+        <div className="w-16 h-16 rounded-full bg-[url('https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80&w=300')] bg-cover bg-center border-2 border-brand-gold"></div>
       </div>
       
       {/* Gallery Highlight */}
       <Link to="/galerie" className="md:col-span-2 bg-brand-navy-dark rounded-2xl p-6 flex flex-col justify-center group overflow-hidden relative min-h-[160px] cursor-pointer">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-30 transition-transform duration-700 group-hover:scale-105"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=800')] bg-cover bg-center opacity-30 transition-transform duration-700 group-hover:scale-105"></div>
         <div className="absolute inset-0 bg-brand-bg/40"></div>
         <div className="relative z-10 flex w-full justify-between items-center text-brand-light">
           <div>

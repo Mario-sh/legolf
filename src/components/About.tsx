@@ -14,7 +14,7 @@ export default function About() {
             transition={{ duration: 0.8 }}
           >
             <img 
-              src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=2070&auto=format&fit=crop" 
+              src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=800&auto=format&fit=crop" 
               alt="Intérieur du restaurant Le Golfe" 
               className="w-[85%] aspect-[4/5] object-cover float-right rounded-xl opacity-80"
             />
@@ -27,7 +27,7 @@ export default function About() {
             className="absolute bottom-10 left-0 w-[55%]"
           >
             <img 
-              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1974&auto=format&fit=crop" 
+              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop" 
               alt="Plat de Fruits de mer" 
               className="w-full aspect-square object-cover border-8 border-brand-navy rounded-xl opacity-90 block"
             />

@@ -2,24 +2,24 @@ import { motion } from 'motion/react';
 import { Camera, Search } from 'lucide-react';
 
 const images = [
-  "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1481070555726-e2fe8357725c?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1504113888839-1c8eb5023365?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1484723091791-c0e7e147c214?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1534080564583-6be75777b70a?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1623341214825-9f4f963727da?auto=format&fit=crop&q=80"
+  "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1481070555726-e2fe8357725c?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1504113888839-1c8eb5023365?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1484723091791-c0e7e147c214?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1534080564583-6be75777b70a?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1623341214825-9f4f963727da?auto=format&fit=crop&q=80&w=800"
 ];
 
 export default function GalleryPage() {
@@ -28,7 +28,7 @@ export default function GalleryPage() {
       
       {/* Header */}
       <div className="bg-brand-navy rounded-3xl p-8 md:p-16 border border-brand-light/5 text-center flex flex-col items-center justify-center min-h-[300px] mb-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-10"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=1200')] bg-cover bg-center opacity-10"></div>
         <div className="relative z-10">
           <span className="text-[10px] tracking-widest text-brand-gold uppercase font-bold mb-4 block flex items-center justify-center gap-2">
             <Camera size={14} /> Galerie Culinaire
