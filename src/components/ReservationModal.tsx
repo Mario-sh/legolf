@@ -63,35 +63,52 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
     
     try {
       setIsDownloading(true);
-      // Wait a bit for the UI to be fully ready and stable
-      await new Promise(resolve => setTimeout(resolve, 300));
+      // Attend que l'interface soit figée et prête
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       const canvas = await html2canvas(receiptRef.current, {
         backgroundColor: '#0A0F14',
-        scale: 3,
+        scale: 2,
         useCORS: true,
         allowTaint: true,
         logging: false,
+        onclone: (clonedDoc) => {
+          // Force l'affichage si besoin dans le clone
+          const receipt = clonedDoc.querySelector('[data-receipt="true"]') as HTMLElement;
+          if (receipt) {
+            receipt.style.display = 'block';
+            receipt.style.visibility = 'visible';
+          }
+        }
       });
       
       const imgData = canvas.toDataURL('image/png');
       
-      const pdf = new jsPDF({
-        orientation: 'p',
-        unit: 'mm',
-        format: [80, 140]
-      });
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Pass_LeGolfe_${formData.name.trim().replace(/\s+/g, '_') || 'Reservation'}.pdf`);
-      setIsDownloading(false);
+      try {
+        const doc = new jsPDF({
+          orientation: 'p',
+          unit: 'mm',
+          format: [80, 140]
+        });
+        
+        doc.addImage(imgData, 'PNG', 0, 0, 80, 140);
+        doc.save(`Pass_LeGolfe_${formData.name.trim().replace(/\s+/g, '_') || 'Reservation'}.pdf`);
+        setIsDownloading(false);
+      } catch (pdfError) {
+        console.error('Erreur PDF, passage au fallback PNG:', pdfError);
+        // Fallback PNG direct
+        const link = document.createElement('a');
+        link.download = `Pass_LeGolfe_${formData.name.trim().replace(/\s+/g, '_') || 'Reservation'}.png`;
+        link.href = imgData;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setIsDownloading(false);
+      }
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      console.error('Erreur générale de capture:', error);
       setIsDownloading(false);
-      alert("Une erreur est survenue lors de la génération du PDF.");
+      alert("Un problème empêche la création du document. Vous pouvez faire une capture d'écran de votre réservation.");
     }
   };
 
