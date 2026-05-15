@@ -3,6 +3,7 @@ import About from '../components/About';
 import Menu from '../components/Menu';
 import Gallery from '../components/Gallery';
 import Reviews from '../components/Reviews';
+import MapSection from '../components/MapSection';
 import Contact from '../components/Contact';
 
 export default function HomePage() {
@@ -13,6 +14,7 @@ export default function HomePage() {
       <Menu />
       <Gallery />
       <Reviews />
+      <MapSection />
       <Contact />
     </main>
   );

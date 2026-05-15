@@ -10,8 +10,8 @@ const images = [
   "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=800",
   "https://images.unsplash.com/photo-1481070555726-e2fe8357725c?auto=format&fit=crop&q=80&w=800",
   "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&q=80&w=800",
-  "https://images.unsplash.com/photo-1504113888839-1c8eb5023365?auto=format&fit=crop&q=80&w=800",
-  "https://images.unsplash.com/photo-1484723091791-c0e7e147c214?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1565299507177-b0ac66763828?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&q=80&w=800",
   "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800",
   "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80&w=800",
   "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&q=80&w=800",
@@ -24,7 +24,7 @@ const images = [
 
 export default function GalleryPage() {
   return (
-    <main className="animate-in fade-in duration-500 min-h-screen pb-20">
+    <div className="animate-in fade-in duration-500">
       
       {/* Header */}
       <div className="bg-brand-navy rounded-3xl p-8 md:p-16 border border-brand-light/5 text-center flex flex-col items-center justify-center min-h-[300px] mb-8 relative overflow-hidden">
@@ -66,6 +66,6 @@ export default function GalleryPage() {
           </motion.div>
         ))}
       </div>
-    </main>
+    </div>
   );
 }

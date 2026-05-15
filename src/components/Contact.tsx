@@ -77,26 +77,19 @@ export default function Contact() {
         </button>
       </motion.div>
 
-      {/* Location / Map */}
+      {/* Location / Info overlay */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 0.3 }}
-        className="col-span-1 md:col-span-1 lg:col-span-1 bg-brand-navy rounded-2xl overflow-hidden relative min-h-[200px]"
+        className="col-span-1 bg-brand-navy rounded-2xl p-6 flex flex-col justify-center border border-brand-light/5 min-h-[200px]"
       >
-        <iframe 
-          title="Carte Le Golfe Restaurant"
-          src="https://maps.google.com/maps?q=12+Route+des+Sanguinaires,+20000+Ajaccio&t=&z=15&ie=UTF8&iwloc=&output=embed"
-          className="absolute inset-0 w-full h-full border-0 grayscale opacity-80 mix-blend-luminosity hover:grayscale-0 hover:opacity-100 hover:mix-blend-normal transition-all duration-500"
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-        />
-        <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-brand-navy/90 via-brand-navy/50 to-transparent pointer-events-none z-10">
-          <div className="flex items-start gap-2 text-brand-gold drop-shadow-md">
-            <MapPin size={16} className="mt-0.5 shrink-0" />
-            <p className="text-xs font-serif text-brand-light leading-tight drop-shadow">
+        <div className="flex items-start gap-4 text-brand-gold">
+          <MapPin size={24} className="shrink-0" />
+          <div>
+            <p className="text-lg font-serif text-brand-light mb-2">Notre Adresse</p>
+            <p className="text-sm opacity-60 text-brand-light leading-relaxed">
               12 Route des Sanguinaires<br />20000 Ajaccio
             </p>
           </div>
