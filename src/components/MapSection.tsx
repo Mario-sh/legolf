@@ -9,23 +9,41 @@ const RESTAURANT_LOCATION = { lat: 41.9267, lng: 8.7381 };
 export default function MapSection() {
   if (!hasValidKey) {
     return (
-      <section id="location" className="md:col-span-4 bg-brand-navy rounded-2xl p-8 border border-brand-light/5 text-center flex flex-col items-center justify-center min-h-[400px]">
-        <div className="max-w-md">
-          <h2 className="text-2xl font-serif text-brand-light mb-4 text-brand-gold">Carte Interactive</h2>
-          <p className="text-sm text-brand-light/60 mb-6">
-            Pour afficher la carte interactive, veuillez configurer votre clé API Google Maps.
-          </p>
-          <div className="text-left bg-black/30 p-6 rounded-xl border border-brand-gold/20 text-xs leading-relaxed space-y-4">
-            <p><strong>Étape 1:</strong> <a href="https://console.cloud.google.com/google/maps-apis/start?utm_campaign=gmp-code-assist-ais" target="_blank" rel="noopener" className="text-brand-gold underline">Obtenez une clé API</a></p>
-            <p><strong>Étape 2:</strong> Ajoutez votre clé dans AI Studio:</p>
-            <ul className="list-disc ml-4 space-y-2">
-              <li>Ouvrez les <strong>Paramètres</strong> (icône ⚙️ en haut à droite)</li>
-              <li>Sélectionnez <strong>Secrets</strong></li>
-              <li>Tapez <code>GOOGLE_MAPS_PLATFORM_KEY</code> comme nom du secret</li>
-              <li>Collez votre clé comme valeur et appuyez sur <strong>Entrée</strong></li>
-            </ul>
-          </div>
+      <section id="location" className="md:col-span-4 bg-brand-navy rounded-2xl p-12 border border-brand-light/5 text-center flex flex-col items-center justify-center min-h-[500px] relative overflow-hidden group">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-brand-gold blur-[120px]"></div>
+          <div className="absolute bottom-[-10%] left-[-10%] w-[30%] h-[30%] rounded-full bg-brand-gold blur-[100px]"></div>
         </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative z-10 max-w-xl"
+        >
+          <span className="bg-brand-gold text-black text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-[0.2em] inline-block mb-6 shadow-xl">
+            Localisation
+          </span>
+          <h2 className="text-4xl md:text-5xl font-serif text-brand-light mb-6">Nous trouver</h2>
+          <p className="text-lg text-brand-light/70 mb-8 font-light">
+            Situé au bord de l'eau sur la célèbre route des Sanguinaires, Le Golfe vous accueille dans un cadre idyllique.
+          </p>
+          
+          <div className="bg-white/5 backdrop-blur-sm border border-brand-light/10 p-8 rounded-2xl mb-8">
+            <p className="text-xl text-brand-gold font-serif mb-1">12 Route des Sanguinaires</p>
+            <p className="text-brand-light/60 uppercase tracking-widest text-sm">20000 Ajaccio, Corse</p>
+          </div>
+
+          <a 
+            href={`https://www.google.com/maps/dir/?api=1&destination=${RESTAURANT_LOCATION.lat},${RESTAURANT_LOCATION.lng}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 bg-brand-gold text-brand-bg px-10 py-5 rounded-full uppercase tracking-widest text-[11px] font-bold hover:bg-brand-light transition-all duration-500 shadow-2xl group-hover:scale-105"
+          >
+            Ouvrir dans Google Maps
+          </a>
+        </motion.div>
       </section>
     );
   }
