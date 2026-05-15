@@ -59,17 +59,40 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
     if (!receiptRef.current) return;
     
     try {
+      // Small delay to ensure rendering is complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const canvas = await html2canvas(receiptRef.current, {
         backgroundColor: '#0A0F14',
-        scale: 3,
-        logging: false,
-        useCORS: true
+        scale: 2, // 2 is usually enough for clarity without being too heavy
+        logging: true, // Enable logging to debug if it fails again
+        useCORS: true,
+        allowTaint: true,
+        onclone: (clonedDoc) => {
+          // Ensure cloned element is visible for capture
+          const receipt = clonedDoc.querySelector('[data-receipt="true"]') as HTMLElement;
+          if (receipt) {
+            receipt.style.display = 'block';
+            receipt.style.visibility = 'visible';
+          }
+        }
       });
       
+      const dataUri = canvas.toDataURL('image/png');
+      const blob = await (await fetch(dataUri)).blob();
+      const url = window.URL.createObjectURL(blob);
+      
       const link = document.createElement('a');
-      link.download = `Reservation_LeGolfe_${formData.name.replace(/\s+/g, '_') || 'Client'}.png`;
-      link.href = canvas.toDataURL('image/png');
+      link.style.display = 'none';
+      link.href = url;
+      link.download = `Reservation_LeGolfe_${formData.name.trim().replace(/\s+/g, '_') || 'Pass'}.png`;
+      
+      document.body.appendChild(link);
       link.click();
+      
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
     } catch (error) {
       console.error('Error generating receipt:', error);
     }
@@ -109,7 +132,7 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
             </div>
 
             {/* Content */}
-            <div className="p-6 md:p-8">
+            <div className="p-4 md:p-8 max-h-[80vh] overflow-y-auto custom-scrollbar">
               <AnimatePresence mode="wait">
                 {step === 1 && (
                   <motion.div
@@ -126,15 +149,17 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
                       </label>
                       <div className="flex items-center gap-4">
                         <button
+                          type="button"
                           onClick={() => setGuests((g) => Math.max(1, g - 1))}
-                          className="w-10 h-10 rounded-full border border-brand-light/20 flex items-center justify-center text-brand-light hover:border-brand-gold hover:text-brand-gold transition-colors"
+                          className="w-10 h-10 rounded-full border border-brand-light/20 flex items-center justify-center text-brand-light hover:border-brand-gold hover:text-brand-gold transition-colors focus:outline-none"
                         >
                           -
                         </button>
                         <span className="text-2xl font-serif text-brand-light w-8 text-center">{guests}</span>
                         <button
+                          type="button"
                           onClick={() => setGuests((g) => Math.min(12, g + 1))}
-                          className="w-10 h-10 rounded-full border border-brand-light/20 flex items-center justify-center text-brand-light hover:border-brand-gold hover:text-brand-gold transition-colors"
+                          className="w-10 h-10 rounded-full border border-brand-light/20 flex items-center justify-center text-brand-light hover:border-brand-gold hover:text-brand-gold transition-colors focus:outline-none"
                         >
                           +
                         </button>
@@ -151,7 +176,7 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                         min={new Date().toISOString().split('T')[0]}
-                        className="w-full bg-brand-bg text-brand-light border border-brand-light/10 rounded-lg p-3 focus:outline-none focus:border-brand-gold transition-colors"
+                        className="w-full bg-brand-bg text-brand-light border border-brand-light/10 rounded-lg p-3 text-sm focus:outline-none focus:border-brand-gold transition-colors"
                       />
                     </div>
 
@@ -160,10 +185,11 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
                       <label className="flex items-center gap-2 text-sm text-brand-light/70 mb-3">
                         <Clock size={16} /> Heure
                       </label>
-                      <div className="grid grid-cols-5 gap-2">
+                      <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-5 gap-2">
                         {timeSlots.map((t) => (
                           <button
                             key={t}
+                            type="button"
                             onClick={() => setTime(t)}
                             className={`py-2 rounded-lg text-[10px] md:text-xs border transition-all duration-300 ${
                               time === t
@@ -182,7 +208,7 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
                       <label className="flex items-center gap-2 text-sm text-brand-light/70 mb-3">
                         Placement souhaité
                       </label>
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         {[
                           { id: 'salle', label: 'Salle', desc: 'Ambiance feutrée' },
                           { id: 'terrasse', label: 'Terrasse', desc: 'Face à la mer' },
@@ -190,6 +216,7 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
                         ].map((p) => (
                           <button
                             key={p.id}
+                            type="button"
                             onClick={() => setPreference(p.id)}
                             className={`p-3 rounded-xl border text-left transition-all duration-300 ${
                               preference === p.id
@@ -207,9 +234,10 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
                     </div>
 
                     <button
+                      type="button"
                       onClick={handleNext}
                       disabled={!date || !time}
-                      className="w-full py-4 mt-6 bg-brand-light text-brand-bg uppercase tracking-widest text-xs font-bold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-brand-gold transition-colors flex items-center justify-center gap-2"
+                      className="w-full py-4 mt-6 bg-brand-light text-brand-bg uppercase tracking-widest text-[10px] font-bold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-brand-gold transition-colors flex items-center justify-center gap-2 shadow-xl"
                     >
                       Continuer <ArrowRight size={16} />
                     </button>
@@ -328,86 +356,92 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
                       Votre table est réservée avec succès !
                     </p>
 
-                    {/* Receipt for preview and capture */}
-                    <div className="relative group">
+                    {/* Receipt Container */}
+                    <div className="flex flex-col items-center">
                       <div 
                         ref={receiptRef}
-                        className="bg-brand-navy p-8 rounded-2xl border border-brand-gold/20 text-left mb-6 max-w-[320px] mx-auto shadow-2xl relative overflow-hidden"
+                        data-receipt="true"
+                        className="bg-[#0A0F14] p-6 rounded-2xl border border-brand-gold/30 text-left mb-6 w-full max-w-[320px] shadow-2xl relative overflow-hidden"
+                        style={{ fontFamily: "'Inter', sans-serif" }}
                       >
-                        {/* Decorative elements for the captured receipt */}
-                        <div className="absolute top-0 right-0 p-4 opacity-10">
-                          <QrCode size={60} className="text-brand-gold" />
-                        </div>
+                        {/* Decorative elements for the receipt */}
+                        <div className="absolute top-[-20px] right-[-20px] w-20 h-20 bg-brand-gold/5 rounded-full blur-xl"></div>
                         
                         <div className="mb-6 text-center border-b border-brand-light/10 pb-4">
-                          <h5 className="font-serif text-xl text-brand-gold">Le Golfe</h5>
-                          <p className="text-[8px] uppercase tracking-widest text-brand-light/40">Restaurant Gastronomique</p>
+                          <h5 className="font-serif text-2xl text-brand-gold">Le Golfe</h5>
+                          <p className="text-[8px] uppercase tracking-[0.4em] text-brand-light/40 mt-1">Restaurant Ajaccio</p>
                         </div>
 
                         <div className="space-y-4">
-                          <div>
-                            <p className="text-[8px] uppercase tracking-widest text-brand-light/40 mb-1">Client</p>
-                            <p className="text-sm text-brand-light font-medium">{formData.name}</p>
+                          <div className="flex justify-between items-end border-b border-brand-light/5 pb-2">
+                            <div>
+                              <p className="text-[7px] uppercase tracking-widest text-brand-light/40 mb-1">Client</p>
+                              <p className="text-xs text-brand-light font-medium">{formData.name}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-[7px] uppercase tracking-widest text-brand-light/40 mb-1">Convives</p>
+                              <p className="text-xs text-brand-light">{guests} Pers.</p>
+                            </div>
                           </div>
                           
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className="grid grid-cols-2 gap-4 border-b border-brand-light/5 pb-2">
                             <div>
-                              <p className="text-[8px] uppercase tracking-widest text-brand-light/40 mb-1">Date</p>
-                              <p className="text-[10px] text-brand-light">{new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                              <p className="text-[7px] uppercase tracking-widest text-brand-light/40 mb-1">Date</p>
+                              <p className="text-[10px] text-brand-light font-medium">
+                                {new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                              </p>
                             </div>
-                            <div>
-                              <p className="text-[8px] uppercase tracking-widest text-brand-light/40 mb-1">Heure</p>
-                              <p className="text-[10px] text-brand-light">{time}</p>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <p className="text-[8px] uppercase tracking-widest text-brand-light/40 mb-1">Convives</p>
-                              <p className="text-[10px] text-brand-light">{guests} Personnes</p>
-                            </div>
-                            <div>
-                              <p className="text-[8px] uppercase tracking-widest text-brand-light/40 mb-1">Placement</p>
-                              <p className="text-[10px] text-brand-light capitalize">{preference}</p>
+                            <div className="text-right">
+                              <p className="text-[7px] uppercase tracking-widest text-brand-light/40 mb-1">Heure</p>
+                              <p className="text-[10px] text-brand-light font-medium">{time}</p>
                             </div>
                           </div>
 
-                          <div className="pt-4 flex flex-col items-center justify-center border-t border-dashed border-brand-light/20">
-                            <div className="bg-white p-2 rounded-lg mb-2">
+                          <div className="flex justify-between items-center bg-white/5 p-2 rounded-lg">
+                            <span className="text-[8px] uppercase tracking-widest text-brand-light/40">Placement</span>
+                            <span className="text-[10px] text-brand-gold font-bold uppercase">{preference}</span>
+                          </div>
+
+                          <div className="pt-4 flex flex-col items-center justify-center">
+                            <div className="bg-white p-2 rounded-xl mb-3 shadow-lg">
                               <QRCodeSVG 
-                                value={`RES-${Date.now()}-${formData.name}`} 
-                                size={80}
-                                level="M"
+                                value={`LE-GOLFE-RES-${Date.now()}-${formData.name}`} 
+                                size={90}
+                                level="H"
                                 includeMargin={false}
                               />
                             </div>
-                            <p className="text-[7px] text-brand-light/30 uppercase tracking-[0.3em]">Réservation ID: {Math.random().toString(36).substring(7).toUpperCase()}</p>
+                            <p className="text-[6px] text-brand-light/20 uppercase tracking-[0.5em] font-mono">
+                              ID: {Math.random().toString(36).substring(7).toUpperCase()}
+                            </p>
                           </div>
                         </div>
 
-                        {/* Cut lines decoration */}
-                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-[radial-gradient(circle,rgba(197,165,114,0.1)_1px,transparent_1px)] bg-[length:8px_8px]"></div>
+                        {/* Zigzag bottom deco */}
+                        <div className="absolute bottom-0 left-0 right-0 h-1 flex">
+                          {[...Array(20)].map((_, i) => (
+                            <div key={i} className="flex-1 h-1 bg-brand-gold/10 transform rotate-45 translate-y-1/2"></div>
+                          ))}
+                        </div>
                       </div>
                       
-                      <div className="absolute inset-0 flex items-center justify-center bg-brand-bg/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl backdrop-blur-sm pointer-events-none">
-                         <Download size={32} className="text-brand-gold animate-bounce" />
+                      <div className="flex flex-col gap-3 w-full max-w-[320px]">
+                        <button
+                          type="button"
+                          onClick={handleDownload}
+                          className="w-full py-4 bg-brand-gold text-brand-bg uppercase tracking-[0.2em] text-[10px] font-bold rounded-xl hover:bg-brand-light transition-all flex items-center justify-center gap-2 shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                        >
+                          <Download size={16} /> Télécharger le Pass
+                        </button>
+                        
+                        <button
+                          type="button"
+                          onClick={onClose}
+                          className="w-full py-3 text-brand-light/40 uppercase tracking-[0.2em] text-[8px] hover:text-brand-light transition-colors"
+                        >
+                          Terminer
+                        </button>
                       </div>
-                    </div>
-                    
-                    <div className="flex flex-col gap-3 max-w-xs mx-auto">
-                      <button
-                        onClick={handleDownload}
-                        className="w-full py-4 bg-brand-gold text-brand-bg uppercase tracking-widest text-[10px] font-bold rounded-xl hover:bg-brand-light transition-all flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/10"
-                      >
-                        <Download size={16} /> Télécharger le reçu
-                      </button>
-                      
-                      <button
-                        onClick={onClose}
-                        className="w-full py-3 text-brand-light/40 uppercase tracking-widest text-[8px] hover:text-brand-light transition-colors"
-                      >
-                        Fermer la fenêtre
-                      </button>
                     </div>
                   </motion.div>
                 )}
