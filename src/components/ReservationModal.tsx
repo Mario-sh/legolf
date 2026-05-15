@@ -63,40 +63,48 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
     
     try {
       setIsDownloading(true);
-      // Attend que l'interface soit figée et prête
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Attend un peu plus pour être sûr que tout (QR code, polices, images) est stable
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      const canvas = await html2canvas(receiptRef.current, {
+      const element = receiptRef.current;
+      const canvas = await html2canvas(element, {
         backgroundColor: '#0A0F14',
-        scale: 2,
+        scale: 3, // Haute résolution
         useCORS: true,
         allowTaint: true,
         logging: false,
+        width: element.offsetWidth,
+        height: element.offsetHeight,
         onclone: (clonedDoc) => {
-          // Force l'affichage si besoin dans le clone
           const receipt = clonedDoc.querySelector('[data-receipt="true"]') as HTMLElement;
           if (receipt) {
             receipt.style.display = 'block';
             receipt.style.visibility = 'visible';
+            receipt.style.transform = 'none';
+            receipt.style.margin = '0';
+            receipt.style.padding = '24px'; // Correspond au p-6
           }
         }
       });
       
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = canvas.toDataURL('image/png', 1.0);
       
       try {
+        // Dimensions du PDF basées sur l'élément réel pour éviter les déformations
+        const imgWidth = 80; 
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
         const doc = new jsPDF({
           orientation: 'p',
           unit: 'mm',
-          format: [80, 140]
+          format: [imgWidth, imgHeight]
         });
         
-        doc.addImage(imgData, 'PNG', 0, 0, 80, 140);
+        doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight, undefined, 'FAST');
         doc.save(`Pass_LeGolfe_${formData.name.trim().replace(/\s+/g, '_') || 'Reservation'}.pdf`);
         setIsDownloading(false);
       } catch (pdfError) {
         console.error('Erreur PDF, passage au fallback PNG:', pdfError);
-        // Fallback PNG direct
         const link = document.createElement('a');
         link.download = `Pass_LeGolfe_${formData.name.trim().replace(/\s+/g, '_') || 'Reservation'}.png`;
         link.href = imgData;
