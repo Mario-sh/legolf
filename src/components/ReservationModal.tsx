@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Calendar as CalendarIcon, Clock, Users, ArrowRight, Check, Download, QrCode } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 interface ReservationModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
   const [preference, setPreference] = useState('salle');
   const [occasion, setOccasion] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', requests: '' });
   const receiptRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +32,7 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
         setPreference('salle');
         setOccasion('');
         setIsSubmitting(false);
+        setIsDownloading(false);
         setFormData({ name: '', email: '', phone: '', requests: '' });
       }, 500);
     }
@@ -59,42 +62,36 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
     if (!receiptRef.current) return;
     
     try {
-      // Small delay to ensure rendering is complete
-      await new Promise(resolve => setTimeout(resolve, 100));
+      setIsDownloading(true);
+      // Wait a bit for the UI to be fully ready and stable
+      await new Promise(resolve => setTimeout(resolve, 300));
       
       const canvas = await html2canvas(receiptRef.current, {
         backgroundColor: '#0A0F14',
-        scale: 2, // 2 is usually enough for clarity without being too heavy
-        logging: true, // Enable logging to debug if it fails again
+        scale: 3,
         useCORS: true,
         allowTaint: true,
-        onclone: (clonedDoc) => {
-          // Ensure cloned element is visible for capture
-          const receipt = clonedDoc.querySelector('[data-receipt="true"]') as HTMLElement;
-          if (receipt) {
-            receipt.style.display = 'block';
-            receipt.style.visibility = 'visible';
-          }
-        }
+        logging: false,
       });
       
-      const dataUri = canvas.toDataURL('image/png');
-      const blob = await (await fetch(dataUri)).blob();
-      const url = window.URL.createObjectURL(blob);
+      const imgData = canvas.toDataURL('image/png');
       
-      const link = document.createElement('a');
-      link.style.display = 'none';
-      link.href = url;
-      link.download = `Reservation_LeGolfe_${formData.name.trim().replace(/\s+/g, '_') || 'Pass'}.png`;
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: [80, 140]
+      });
       
-      document.body.appendChild(link);
-      link.click();
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      // Cleanup
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(link);
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Pass_LeGolfe_${formData.name.trim().replace(/\s+/g, '_') || 'Reservation'}.pdf`);
+      setIsDownloading(false);
     } catch (error) {
-      console.error('Error generating receipt:', error);
+      console.error('Error generating PDF:', error);
+      setIsDownloading(false);
+      alert("Une erreur est survenue lors de la génération du PDF.");
     }
   };
 
@@ -404,7 +401,7 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
 
                           <div className="pt-4 flex flex-col items-center justify-center">
                             <div className="bg-white p-2 rounded-xl mb-3 shadow-lg">
-                              <QRCodeSVG 
+                              <QRCodeCanvas 
                                 value={`LE-GOLFE-RES-${Date.now()}-${formData.name}`} 
                                 size={90}
                                 level="H"
@@ -429,9 +426,18 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
                         <button
                           type="button"
                           onClick={handleDownload}
-                          className="w-full py-4 bg-brand-gold text-brand-bg uppercase tracking-[0.2em] text-[10px] font-bold rounded-xl hover:bg-brand-light transition-all flex items-center justify-center gap-2 shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                          disabled={isDownloading}
+                          className="w-full py-4 bg-brand-gold text-brand-bg uppercase tracking-[0.2em] text-[10px] font-bold rounded-xl hover:bg-brand-light transition-all flex items-center justify-center gap-2 shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
                         >
-                          <Download size={16} /> Télécharger le Pass
+                          {isDownloading ? (
+                             <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                              className="w-4 h-4 border-2 border-brand-bg border-t-transparent rounded-full"
+                            />
+                          ) : (
+                            <><Download size={16} /> Télécharger le Pass</>
+                          )}
                         </button>
                         
                         <button
